@@ -19,6 +19,13 @@ app.get('/api/foods/:id', (req, res) => {
   })
 })
 
+app.delete('/api/foods/:id', (req, res) => {
+  const id = req.params.id;
+  const deleted = deleteByID(id, app.locals.foods);
+
+  res.sendStatus(200);
+})
+
 if (!module.parent) {
   app.listen(app.get('port'), () => {
     console.log(`Running on ${app.get('port')}.`);
@@ -32,6 +39,16 @@ function searchByID(id, array) {
     var currentFood = array[i];
     if(currentFood["id"] == id) {
       return currentFood;
+    }
+  }
+}
+
+function deleteByID(id, array) {
+  for(var i = 0; i < array.length; i++) {
+    var currentFood = array[i];
+    if(currentFood["id"] == id) {
+      array.splice(i, 1);
+      return true;
     }
   }
 }
