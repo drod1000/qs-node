@@ -7,14 +7,9 @@ app.set('port', process.env.PORT || 3000);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}))
 
-app.locals.foods = {
-  1: { name: 'Apple', calories: 60},
-  2: { name: 'Banana', calories: 120}
-}
-
 app.get('/api/foods/:id', (req, res) => {
   const id = req.params.id;
-  const food = app.locals.foods[id];
+  const food = searchByID(id, app.locals.foods);
 
   res.status(200).json({
     food
@@ -28,3 +23,12 @@ if (!module.parent) {
 }
 
 module.exports = app;
+
+function searchByID(id, array) {
+  for(var i = 0; i < array.length; i++) {
+    var currentFood = array[i];
+    if(currentFood["id"] == id) {
+      return currentFood;
+    }
+  }
+}
