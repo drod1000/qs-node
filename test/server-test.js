@@ -32,6 +32,7 @@ describe('Server', () => {
         { id: 2, name: 'Banana', calories: 120}
       ]
     })
+
     it('should return a 404 is the food is not found', (done) => {
       this.request.get('/api/foods/3', (err, res) => {
         if(err) {
@@ -42,6 +43,7 @@ describe('Server', () => {
         done();
       })
     })
+
     it('should return the corresponding food if there is a match', (done) => {
       this.request.get('/api/foods/1', (err, res) => {
         if(err) {
@@ -51,6 +53,28 @@ describe('Server', () => {
         chai.assert.equal(res.statusCode, 200);
         chai.assert.include(res.body, 'Apple');
         chai.assert.include(res.body, 60);
+        done();
+      })
+    })
+  })
+
+  describe('DELETE /api/foods/:id', () => {
+    beforeEach(() => {
+      app.locals.foods = [
+        { id: 1, name: 'Apple', calories: 60},
+        { id: 2, name: 'Banana', calories: 120}
+      ]
+    })
+
+    it('should delete the corresponding food if there is a match', (done) => {
+      this.request.delete('/api/foods/1', (err, res) => {
+        if(err) {
+          done(err);
+        }
+        var foodCount = app.locals.foods.length;
+
+        chai.assert.equal(res.statusCode, 200);
+        chai.assert.equal(foodCount, 1);
         done();
       })
     })
