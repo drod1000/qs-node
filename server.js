@@ -11,6 +11,9 @@ app.get('/api/foods/:id', (req, res) => {
   const id = req.params.id;
   const food = searchByID(id, app.locals.foods);
 
+  if(!food) {
+    return res.sendStatus(404);
+  }
   res.status(200).json({
     food
   })

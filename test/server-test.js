@@ -32,6 +32,16 @@ describe('Server', () => {
         { id: 2, name: 'Banana', calories: 120}
       ]
     })
+    it('should return a 404 is the food is not found', (done) => {
+      this.request.get('/api/foods/3', (err, res) => {
+        if(err) {
+          done(err);
+        }
+
+        chai.assert.equal(res.statusCode, 404);
+        done();
+      })
+    })
     it('should return the corresponding food if there is a match', (done) => {
       this.request.get('/api/foods/1', (err, res) => {
         if(err) {
