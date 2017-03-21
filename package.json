@@ -1,0 +1,28 @@
+{
+  "name": "qs-node",
+  "version": "1.0.0",
+  "description": "node app that serves as the backend for quantified self",
+  "main": "server.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/drod1000/qs-node.git"
+  },
+  "author": "Daniel Rodriguez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/drod1000/qs-node/issues"
+  },
+  "homepage": "https://github.com/drod1000/qs-node#readme",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "express": "^4.15.2"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0",
+    "request": "^2.81.0"
+  }
+}
