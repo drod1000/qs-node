@@ -1,5 +1,6 @@
 const chai = require('chai');
 const app = require('../server');
+const request = require('request');
 
 describe('Server', () => {
   before((done) => {
@@ -22,5 +23,26 @@ describe('Server', () => {
 
   it('should exist', () => {
     chai.assert(app);
+  })
+
+  describe('GET /api/foods/:id', () => {
+    beforeEach(() => {
+      app.locals.foods = [
+        { id: 1, name: 'Apple', calories: 60},
+        { id: 2, name: 'Banana', calories: 120}
+      ]
+    })
+    it('should return the corresponding food if there is a match', (done) => {
+      this.request.get('/api/foods/1', (err, res) => {
+        if(err) {
+          done(err);
+        }
+
+        chai.assert.equal(res.statusCode, 200);
+        chai.assert.include(res.body, 'Apple');
+        chai.assert.include(res.body, 60);
+        done();
+      })
+    })
   })
 })
