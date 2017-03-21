@@ -23,6 +23,9 @@ app.delete('/api/foods/:id', (req, res) => {
   const id = req.params.id;
   const deleted = deleteByID(id, app.locals.foods);
 
+  if(!deleted) {
+    return res.sendStatus(404);
+  }
   res.sendStatus(200);
 })
 

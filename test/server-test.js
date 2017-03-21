@@ -66,6 +66,17 @@ describe('Server', () => {
       ]
     })
 
+    it('should return a 404 is the food is not found', (done) => {
+      this.request.delete('/api/foods/3', (err, res) => {
+        if(err) {
+          done(err);
+        }
+
+        chai.assert.equal(res.statusCode, 404);
+        done();
+      })
+    })
+
     it('should delete the corresponding food if there is a match', (done) => {
       this.request.delete('/api/foods/1', (err, res) => {
         if(err) {
