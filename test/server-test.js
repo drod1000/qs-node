@@ -93,7 +93,7 @@ describe('Server', () => {
 
   describe('PUT /api/foods/:id', () => {
     beforeEach(() => {
-      app.locals.foods = {id: 1, name: 'Banana', calories: 120};
+      app.locals.foods = [{id: 1, name: 'Banana', calories: 120}];
     })
 
     it('should return the corresponding food if it was updated sucessfully', (done) => {

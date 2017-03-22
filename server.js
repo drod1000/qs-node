@@ -35,6 +35,19 @@ app.get('/api/foods/:id', (req, res) => {
   })
 })
 
+app.put('/api/foods/:id', (req, res) => {
+  const id = req.params.id;
+  const food = req.body.food;
+  const updated = updateByID(id, app.locals.foods, food)
+
+  if(!updated) {
+    return res.sendStatus(404);
+  }
+  res.status(200).json({
+    food
+  })
+})
+
 app.delete('/api/foods/:id', (req, res) => {
   const id = req.params.id;
   const deleted = deleteByID(id, app.locals.foods);
@@ -67,6 +80,16 @@ function deleteByID(id, array) {
     var currentFood = array[i];
     if(currentFood["id"] == id) {
       array.splice(i, 1);
+      return true;
+    }
+  }
+}
+
+function updateByID(id, array, newFood) {
+  for(var i = 0; i < array.length; i++) {
+    var currentFood = array[i];
+    if(currentFood["id"] == id) {
+      array[i] = newFood;
       return true;
     }
   }
