@@ -31,15 +31,16 @@ describe('Server', () => {
     })
 
     it('should receive and store data', (done) => {
-      const food = { name: 'Apple', calories: 60 };
+      const food = {name: 'Apple', calories: 60};
 
-      this.request.post('/api/foods', { form: food }, (err, res) => {
-
+      this.request.post('/api/foods', {form: food}, (err, res) => {
         if(err) {
           done(err);
         }
 
         const foodCount = app.locals.foods.length;
+
+        chai.assert.equal(res.statusCode, 201);
         chai.assert.equal(foodCount, 1);
         done();
       })
@@ -49,8 +50,8 @@ describe('Server', () => {
   describe('GET /api/foods/:id', () => {
     beforeEach(() => {
       app.locals.foods = [
-        { id: 1, name: 'Apple', calories: 60 },
-        { id: 2, name: 'Banana', calories: 120 }
+        {id: 1, name: 'Apple', calories: 60},
+        {id: 2, name: 'Banana', calories: 120}
       ]
     })
 
@@ -82,8 +83,8 @@ describe('Server', () => {
   describe('DELETE /api/foods/:id', () => {
     beforeEach(() => {
       app.locals.foods = [
-        { id: 1, name: 'Apple', calories: 60 },
-        { id: 2, name: 'Banana', calories: 120 }
+        {id: 1, name: 'Apple', calories: 60},
+        {id: 2, name: 'Banana', calories: 120}
       ]
     })
 

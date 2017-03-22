@@ -7,6 +7,16 @@ app.set('port', process.env.PORT || 3000);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}))
 
+app.post('/api/foods', (req, res) => {
+  //Temporary
+  const foodContent = req.body.food;
+
+  app.locals.foods.push(foodContent);
+  res.status(201).json({
+    foodContent
+  })
+})
+
 app.get('/api/foods/:id', (req, res) => {
   const id = req.params.id;
   const food = searchByID(id, app.locals.foods);
