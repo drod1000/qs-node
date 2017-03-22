@@ -11,18 +11,20 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}))
 
 app.post('/api/foods', (req, res) => {
-  //Temporary
-  const food = req.body.food;
+  const name = req.body.name;
+  const calories = req.body.calories;
 
-  if(!food) {
+  if(!name || !calories) {
     return res.status(422).send({
       error: 'No message property provided'
     })
   }
 
-  app.locals.foods.push(food);
-  res.status(201).json({
-    food
+  database.raw('INSERT INTO foods (name, calories) VALUES (?, ?)', [name, calories])
+  .then((data) => {
+    if(data.rowCount == 1) {
+      res.sendStatus(201);
+    }
   })
 })
 

@@ -30,8 +30,14 @@ describe('Server', () => {
   })
 
   describe('POST /api/foods', () => {
-    beforeEach(() => {
-      app.locals.foods = [];
+    beforeEach((done) => {
+      database.raw('TRUNCATE foods RESTART IDENTITY') // reset the ID
+      .then(() => done());
+    })
+
+    afterEach((done) => {
+      database.raw('TRUNCATE foods RESTART IDENTITY') // reset the ID
+      .then(() => done());
     })
 
     it('should return a 422 if request body is empty', (done) => {
@@ -46,17 +52,14 @@ describe('Server', () => {
     })
 
     it('should receive and store data', (done) => {
-      const food = {food: {name: 'Apple', calories: '60'}}
+      const food = { name: 'Apple', calories: '60'};
 
       this.request.post('/api/foods', {form: food}, (err, res) => {
         if(err) {
           done(err);
         }
 
-        const foodCount = app.locals.foods.length;
-
         chai.assert.equal(res.statusCode, 201);
-        chai.assert.equal(foodCount, 1);
         done();
       })
     })
@@ -159,9 +162,8 @@ describe('Server', () => {
         ["Apple", 60]
       ).then(() => done())
       .catch(done);
-
     })
-    
+
     afterEach((done) => {
       database.raw('TRUNCATE foods RESTART IDENTITY') // reset the ID
       .then(() => done());
