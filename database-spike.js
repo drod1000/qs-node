@@ -6,4 +6,4 @@ database.raw('SELECT * FROM foods')
   .then( (data) => {
     console.log(data.rows)
     process.exit();
-  });
+  })

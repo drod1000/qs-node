@@ -1,6 +1,10 @@
 const chai = require('chai');
 const app = require('../server');
 const request = require('request');
+const environment = process.env.NODE_ENV || 'development';
+const configuration = require('../knexfile')[environment];
+const database = require('knex')(configuration);
+
 
 describe('Server', () => {
   before((done) => {
@@ -59,15 +63,16 @@ describe('Server', () => {
   })
 
   describe('GET /api/foods/:id', () => {
-    beforeEach(() => {
-      app.locals.foods = [
-        {id: 1, name: 'Apple', calories: 60},
-        {id: 2, name: 'Banana', calories: 120}
-      ]
+    beforeEach((done) => {
+      database.raw(
+        'INSERT INTO foods (name, calories) VALUES (?, ?)',
+        ["Apple", 60]
+      ).then(() => done())
+      .catch(done);
     })
 
     it('should return a 404 if the food is not found', (done) => {
-      this.request.get('/api/foods/3', (err, res) => {
+      this.request.get('/api/foods/2', (err, res) => {
         if(err) {
           done(err);
         }
@@ -82,10 +87,16 @@ describe('Server', () => {
         if(err) {
           done(err);
         }
+        const id = 1;
+        const name = 'Apple';
+        const calories = 60;
+
+        let parsedFood = JSON.parse(res.body);
 
         chai.assert.equal(res.statusCode, 200);
-        chai.assert.include(res.body, 'Apple');
-        chai.assert.include(res.body, 60);
+        chai.assert.equal(parsedFood.id, id);
+        chai.assert.equal(parsedFood.name, name);
+        chai.assert.equal(parsedFood.calories, calories);
         done();
       })
     })
