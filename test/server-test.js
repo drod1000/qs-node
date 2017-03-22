@@ -29,6 +29,7 @@ describe('Server', () => {
     beforeEach(() => {
       app.locals.foods = [];
     })
+
     it('should not return a 404', (done) => {
       this.request.post('/api/foods', (err, res) => {
         if(err) {
@@ -85,6 +86,27 @@ describe('Server', () => {
         chai.assert.equal(res.statusCode, 200);
         chai.assert.include(res.body, 'Apple');
         chai.assert.include(res.body, 60);
+        done();
+      })
+    })
+  })
+
+  describe('PUT /api/foods/:id', () => {
+    beforeEach(() => {
+      app.locals.foods = {id: 1, name: 'Banana', calories: 120};
+    })
+
+    it('should return the corresponding food if it was updated sucessfully', (done) => {
+      const food = {food: {name: 'Yogurt', calories: '60'}};
+
+      this.request.put('/api/foods/1', {form: food}, (err, res) => {
+        if(err) {
+          done(err);
+        }
+
+        chai.assert.equal(res.statusCode, 200);
+        chai.assert.include(res.body, 'Yogurt');
+        chai.assert.include(res.body, '60');
         done();
       })
     })
