@@ -94,6 +94,20 @@ describe('Server', () => {
   describe('PUT /api/foods/:id', () => {
     beforeEach(() => {
       app.locals.foods = [{id: 1, name: 'Banana', calories: 120}];
+      const food = {food: {name: 'Yogurt', calories: '60'}};
+    })
+
+    it('should return a 404 is the food is not found', (done) => {
+      const food = {food: {name: 'Yogurt', calories: '60'}};
+
+      this.request.get('/api/foods/2', {form: food}, (err, res) => {
+        if(err) {
+          done(err);
+        }
+
+        chai.assert.equal(res.statusCode, 404);
+        done();
+      })
     })
 
     it('should return the corresponding food if it was updated sucessfully', (done) => {
