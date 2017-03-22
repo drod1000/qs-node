@@ -38,6 +38,10 @@ app.get('/api/foods/:id', (req, res) => {
 app.put('/api/foods/:id', (req, res) => {
   const id = req.params.id;
   const food = req.body.food;
+
+  if(!food) {
+    return res.sendStatus(422);
+  }
   const updated = updateByID(id, app.locals.foods, food)
 
   if(!updated) {

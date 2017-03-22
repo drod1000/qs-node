@@ -30,7 +30,7 @@ describe('Server', () => {
       app.locals.foods = [];
     })
 
-    it('should not return a 404', (done) => {
+    it('should return a 422 if request body is empty', (done) => {
       this.request.post('/api/foods', (err, res) => {
         if(err) {
           done(err);
@@ -66,7 +66,7 @@ describe('Server', () => {
       ]
     })
 
-    it('should return a 404 is the food is not found', (done) => {
+    it('should return a 404 if the food is not found', (done) => {
       this.request.get('/api/foods/3', (err, res) => {
         if(err) {
           done(err);
@@ -94,13 +94,23 @@ describe('Server', () => {
   describe('PUT /api/foods/:id', () => {
     beforeEach(() => {
       app.locals.foods = [{id: 1, name: 'Banana', calories: 120}];
-      const food = {food: {name: 'Yogurt', calories: '60'}};
     })
 
-    it('should return a 404 is the food is not found', (done) => {
+    it('should return a 422 if request body is empty', (done) => {
+      this.request.put('/api/foods/1', (err, res) => {
+        if(err) {
+          done(err);
+        }
+
+        chai.assert.equal(res.statusCode, 422);
+        done();
+      })
+    })
+
+    it('should return a 404 if the food is not found', (done) => {
       const food = {food: {name: 'Yogurt', calories: '60'}};
 
-      this.request.get('/api/foods/2', {form: food}, (err, res) => {
+      this.request.put('/api/foods/2', {form: food}, (err, res) => {
         if(err) {
           done(err);
         }
@@ -134,7 +144,7 @@ describe('Server', () => {
       ]
     })
 
-    it('should return a 404 is the food is not found', (done) => {
+    it('should return a 404 if the food is not found', (done) => {
       this.request.delete('/api/foods/3', (err, res) => {
         if(err) {
           done(err);
