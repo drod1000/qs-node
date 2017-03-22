@@ -29,7 +29,7 @@ app.post('/api/foods', (req, res) => {
 app.get('/api/foods/:id', (req, res) => {
   const id = req.params.id;
 
-  database.raw('SELECT * FROM foods where id=?', id)
+  database.raw('SELECT * FROM foods WHERE id=?', id)
   .then((data) => {
     if(!data.rowCount) {
       return res.sendStatus(404);
@@ -57,12 +57,14 @@ app.put('/api/foods/:id', (req, res) => {
 
 app.delete('/api/foods/:id', (req, res) => {
   const id = req.params.id;
-  const deleted = deleteByID(id, app.locals.foods);
 
-  if(!deleted) {
-    return res.sendStatus(404);
-  }
-  res.sendStatus(200);
+  database.raw('DELETE FROM foods WHERE id=?', id)
+  .then((data) => {
+    if(!data.rowCount) {
+      return res.sendStatus(404);
+    }
+    res.sendStatus(200);
+  })
 })
 
 if (!module.parent) {

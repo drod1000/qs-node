@@ -153,15 +153,21 @@ describe('Server', () => {
   })
 
   describe('DELETE /api/foods/:id', () => {
-    beforeEach(() => {
-      app.locals.foods = [
-        {id: 1, name: 'Apple', calories: 60},
-        {id: 2, name: 'Banana', calories: 120}
-      ]
+    beforeEach((done) => {
+      database.raw(
+        'INSERT INTO foods (name, calories) VALUES (?, ?)',
+        ["Apple", 60]
+      ).then(() => done())
+      .catch(done);
+
+      afterEach((done) => {
+        database.raw('TRUNCATE foods RESTART IDENTITY') // reset the ID
+        .then(() => done());
+      })
     })
 
     it('should return a 404 if the food is not found', (done) => {
-      this.request.delete('/api/foods/3', (err, res) => {
+      this.request.delete('/api/foods/2', (err, res) => {
         if(err) {
           done(err);
         }
@@ -177,10 +183,7 @@ describe('Server', () => {
           done(err);
         }
 
-        const foodCount = app.locals.foods.length;
-
         chai.assert.equal(res.statusCode, 200);
-        chai.assert.equal(foodCount, 1);
         done();
       })
     })
