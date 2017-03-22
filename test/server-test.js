@@ -29,9 +29,19 @@ describe('Server', () => {
     beforeEach(() => {
       app.locals.foods = [];
     })
+    it('should not return a 404', (done) => {
+      this.request.post('/api/foods', (err, res) => {
+        if(err) {
+          done(err);
+        }
+
+        chai.assert.equal(res.statusCode, 422);
+        done();
+      })
+    })
 
     it('should receive and store data', (done) => {
-      const food = {name: 'Apple', calories: 60};
+      const food = {food: {name: 'Apple', calories: '60'}}
 
       this.request.post('/api/foods', {form: food}, (err, res) => {
         if(err) {

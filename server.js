@@ -9,11 +9,17 @@ app.use(bodyParser.urlencoded({extended: true}))
 
 app.post('/api/foods', (req, res) => {
   //Temporary
-  const foodContent = req.body.food;
+  const food = req.body.food;
 
-  app.locals.foods.push(foodContent);
+  if(!food) {
+    return res.status(422).send({
+      error: 'No message property provided'
+    })
+  }
+
+  app.locals.foods.push(food);
   res.status(201).json({
-    foodContent
+    food
   })
 })
 
