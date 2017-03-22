@@ -71,6 +71,11 @@ describe('Server', () => {
       .catch(done);
     })
 
+    afterEach((done) => {
+      database.raw('TRUNCATE foods RESTART IDENTITY') // reset the ID
+      .then(() => done());
+    })
+
     it('should return a 404 if the food is not found', (done) => {
       this.request.get('/api/foods/2', (err, res) => {
         if(err) {

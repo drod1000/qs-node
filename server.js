@@ -28,13 +28,13 @@ app.post('/api/foods', (req, res) => {
 
 app.get('/api/foods/:id', (req, res) => {
   const id = req.params.id;
-  const food = searchByID(id, app.locals.foods);
 
-  if(!food) {
-    return res.sendStatus(404);
-  }
-  res.status(200).json({
-    food
+  database.raw('SELECT * FROM foods where id=?', id)
+  .then((data) => {
+    if(!data.rowCount) {
+      return res.sendStatus(404);
+    }
+    res.status(200).json(data.rows[0])
   })
 })
 
