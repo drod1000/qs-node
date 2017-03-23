@@ -50,8 +50,7 @@ app.put('/api/foods/:id', (req, res) => {
     return res.sendStatus(422);
   }
 
-  database.raw(`UPDATE foods SET name = ?, calories = ? WHERE id = ?`,
-  [name, calories, id])
+  Food.updateFood(id, name, calories)
   .then((data) => {
     if(!data.rowCount) {
       return res.sendStatus(404);
