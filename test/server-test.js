@@ -60,6 +60,35 @@ describe('Server', () => {
     })
   })
 
+  describe('GET /api/foods', () => {
+    beforeEach((done) => {
+      Food.createFood('Apple', 60)
+      .then(() => Food.createFood('Banana', 120))
+      .then(() => done())
+      .catch(done);
+    })
+
+    afterEach((done) => {
+      Food.clearFoods().then(() => done());
+    })
+
+    it('can return all foods', (done) => {
+      this.request.get('/api/foods', (err, res) => {
+        if(err) {
+          done(err);
+        }
+        chai.assert.equal(res.statusCode, 200);
+
+        let parsedFoods = JSON.parse(res.body);
+
+        chai.assert.equal(parsedFoods[0].name, 'Apple');
+        chai.assert.equal(parsedFoods[0].calories, 60);
+        chai.assert.equal(parsedFoods[1].name, 'Banana');
+        chai.assert.equal(parsedFoods[1].calories, 120);
+      })
+    })
+  })
+
   describe('GET /api/foods/:id', () => {
     beforeEach((done) => {
       Food.createFood('Apple', 60).then(() => done())
