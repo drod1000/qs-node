@@ -22,9 +22,12 @@ app.post('/api/foods', (req, res) => {
 
   database.raw('INSERT INTO foods (name, calories) VALUES (?, ?)', [name, calories])
   .then((data) => {
-    if(data.rowCount == 1) {
-      res.sendStatus(201);
+    if(!data.rowCount == 1) {
+      res.status(422).send({
+        error: 'Unable to process request'
+      })
     }
+    res.sendStatus(201);
   })
 })
 
