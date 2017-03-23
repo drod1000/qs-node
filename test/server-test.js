@@ -9,6 +9,13 @@ function clearSecrets() {
   return database.raw('TRUNCATE foods RESTART IDENTITY')
 }
 
+function createSecret(food, calories) {
+  return database.raw(
+    'INSERT INTO foods (name, calories) VALUES (?, ?)',
+    [ food, calories ]
+  )
+}
+
 describe('Server', () => {
   before((done) => {
     this.port = 9876;
@@ -68,10 +75,7 @@ describe('Server', () => {
 
   describe('GET /api/foods/:id', () => {
     beforeEach((done) => {
-      database.raw(
-        'INSERT INTO foods (name, calories) VALUES (?, ?)',
-        ["Apple", 60]
-      ).then(() => done())
+      createSecret('Apple', 60).then(() => done())
       .catch(done);
     })
 
@@ -112,10 +116,7 @@ describe('Server', () => {
 
   describe('PUT /api/foods/:id', () => {
     beforeEach((done) => {
-      database.raw(
-        'INSERT INTO foods (name, calories) VALUES (?, ?)',
-        ["Apple", 60]
-      ).then(() => done())
+      createSecret('Apple', 60).then(() => done())
       .catch(done);
     })
 
@@ -163,10 +164,7 @@ describe('Server', () => {
 
   describe('DELETE /api/foods/:id', () => {
     beforeEach((done) => {
-      database.raw(
-        'INSERT INTO foods (name, calories) VALUES (?, ?)',
-        ["Apple", 60]
-      ).then(() => done())
+      createSecret('Apple', 60).then(() => done())
       .catch(done);
     })
 
