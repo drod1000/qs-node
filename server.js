@@ -1,9 +1,7 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-const environment = process.env.NODE_ENV || 'development';
-const configuration = require('./knexfile')[environment];
-const database = require('knex')(configuration);
+const Food = require('./lib/models/food');
 
 app.set('port', process.env.PORT || 3000);
 
@@ -20,7 +18,7 @@ app.post('/api/foods', (req, res) => {
     })
   }
 
-  database.raw('INSERT INTO foods (name, calories) VALUES (?, ?)', [name, calories])
+  Food.createFood(name, calories)
   .then((data) => {
     if(!data.rowCount == 1) {
       res.status(422).send({
@@ -34,7 +32,7 @@ app.post('/api/foods', (req, res) => {
 app.get('/api/foods/:id', (req, res) => {
   const id = req.params.id;
 
-  database.raw('SELECT * FROM foods WHERE id=?', id)
+  Food.findFoodByID(id)
   .then((data) => {
     if(!data.rowCount) {
       return res.sendStatus(404);
@@ -52,8 +50,7 @@ app.put('/api/foods/:id', (req, res) => {
     return res.sendStatus(422);
   }
 
-  database.raw(`UPDATE foods SET name = ?, calories = ? WHERE id = ?`,
-  [name, calories, id])
+  Food.updateFood(id, name, calories)
   .then((data) => {
     if(!data.rowCount) {
       return res.sendStatus(404);
@@ -65,7 +62,7 @@ app.put('/api/foods/:id', (req, res) => {
 app.delete('/api/foods/:id', (req, res) => {
   const id = req.params.id;
 
-  database.raw('DELETE FROM foods WHERE id=?', id)
+  Food.deleteFood(id)
   .then((data) => {
     if(!data.rowCount) {
       return res.sendStatus(404);
