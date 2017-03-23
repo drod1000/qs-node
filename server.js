@@ -2,11 +2,21 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const Food = require('./lib/models/food');
+const cors = require('cors')
 
 app.set('port', process.env.PORT || 3000);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}))
+
+var corsOptions = {
+  origin: '*',
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
+
+app.use(cors(corsOptions))
+
+app.options('*', cors(corsOptions))
 
 app.post('/api/foods', (req, res) => {
   const name = req.body.name;
