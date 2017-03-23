@@ -1,20 +1,7 @@
 const chai = require('chai');
 const app = require('../server');
 const request = require('request');
-const environment = process.env.NODE_ENV || 'development';
-const configuration = require('../knexfile')[environment];
-const database = require('knex')(configuration);
-
-function clearFoods() {
-  return database.raw('TRUNCATE foods RESTART IDENTITY')
-}
-
-function createFood(food, calories) {
-  return database.raw(
-    'INSERT INTO foods (name, calories) VALUES (?, ?)',
-    [ food, calories ]
-  )
-}
+const Food = require('../lib/models/food');
 
 describe('Server', () => {
   before((done) => {
@@ -41,11 +28,11 @@ describe('Server', () => {
 
   describe('POST /api/foods', () => {
     beforeEach((done) => {
-      clearFoods().then(() => done());
+      Food.clearFoods().then(() => done());
     })
 
     afterEach((done) => {
-      clearFoods().then(() => done());
+      Food.clearFoods().then(() => done());
     })
 
     it('should return a 422 if request body is empty', (done) => {
@@ -75,12 +62,12 @@ describe('Server', () => {
 
   describe('GET /api/foods/:id', () => {
     beforeEach((done) => {
-      createFood('Apple', 60).then(() => done())
+      Food.createFood('Apple', 60).then(() => done())
       .catch(done);
     })
 
     afterEach((done) => {
-      clearFoods().then(() => done());
+      Food.clearFoods().then(() => done());
     })
 
     it('should return a 404 if the food is not found', (done) => {
@@ -116,12 +103,12 @@ describe('Server', () => {
 
   describe('PUT /api/foods/:id', () => {
     beforeEach((done) => {
-      createFood('Apple', 60).then(() => done())
+      Food.createFood('Apple', 60).then(() => done())
       .catch(done);
     })
 
     afterEach((done) => {
-      clearFoods().then(() => done());
+      Food.clearFoods().then(() => done());
     })
 
     it('should return a 422 if request body is empty', (done) => {
@@ -164,12 +151,12 @@ describe('Server', () => {
 
   describe('DELETE /api/foods/:id', () => {
     beforeEach((done) => {
-      createFood('Apple', 60).then(() => done())
+      Food.createFood('Apple', 60).then(() => done())
       .catch(done);
     })
 
     afterEach((done) => {
-      clearFoods().then(() => done());
+      Food.clearFoods().then(() => done());
     })
 
     it('should return a 404 if the food is not found', (done) => {
