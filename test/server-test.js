@@ -85,6 +85,7 @@ describe('Server', () => {
         chai.assert.equal(parsedFoods[0].calories, 60);
         chai.assert.equal(parsedFoods[1].name, 'Banana');
         chai.assert.equal(parsedFoods[1].calories, 120);
+        done();
       })
     })
   })

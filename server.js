@@ -29,6 +29,16 @@ app.post('/api/foods', (req, res) => {
   })
 })
 
+app.get('/api/foods/', (req, res) => {
+  Food.allFoods()
+  .then((data) => {
+    if(!data.rowCount) {
+      return res.sendStatus(404);
+    }
+    res.status(200).json(data.rows);
+  })
+})
+
 app.get('/api/foods/:id', (req, res) => {
   const id = req.params.id;
 
@@ -37,7 +47,7 @@ app.get('/api/foods/:id', (req, res) => {
     if(!data.rowCount) {
       return res.sendStatus(404);
     }
-    res.status(200).json(data.rows[0])
+    res.status(200).json(data.rows[0]);
   })
 })
 
