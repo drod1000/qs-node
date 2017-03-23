@@ -62,7 +62,7 @@ app.put('/api/foods/:id', (req, res) => {
 app.delete('/api/foods/:id', (req, res) => {
   const id = req.params.id;
 
-  database.raw('DELETE FROM foods WHERE id=?', id)
+  Food.deleteFood(id)
   .then((data) => {
     if(!data.rowCount) {
       return res.sendStatus(404);
