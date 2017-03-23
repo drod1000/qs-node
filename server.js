@@ -78,32 +78,3 @@ if (!module.parent) {
 }
 
 module.exports = app;
-
-function searchByID(id, array) {
-  for(var i = 0; i < array.length; i++) {
-    var currentFood = array[i];
-    if(currentFood["id"] == id) {
-      return currentFood;
-    }
-  }
-}
-
-function deleteByID(id, array) {
-  for(var i = 0; i < array.length; i++) {
-    var currentFood = array[i];
-    if(currentFood["id"] == id) {
-      array.splice(i, 1);
-      return true;
-    }
-  }
-}
-
-function updateByID(id, array, newFood) {
-  for(var i = 0; i < array.length; i++) {
-    var currentFood = array[i];
-    if(currentFood["id"] == id) {
-      array[i] = newFood;
-      return true;
-    }
-  }
-}
