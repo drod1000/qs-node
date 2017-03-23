@@ -5,11 +5,11 @@ const environment = process.env.NODE_ENV || 'development';
 const configuration = require('../knexfile')[environment];
 const database = require('knex')(configuration);
 
-function clearSecrets() {
+function clearFoods() {
   return database.raw('TRUNCATE foods RESTART IDENTITY')
 }
 
-function createSecret(food, calories) {
+function createFood(food, calories) {
   return database.raw(
     'INSERT INTO foods (name, calories) VALUES (?, ?)',
     [ food, calories ]
@@ -41,11 +41,11 @@ describe('Server', () => {
 
   describe('POST /api/foods', () => {
     beforeEach((done) => {
-      clearSecrets().then(() => done());
+      clearFoods().then(() => done());
     })
 
     afterEach((done) => {
-      clearSecrets().then(() => done());
+      clearFoods().then(() => done());
     })
 
     it('should return a 422 if request body is empty', (done) => {
@@ -75,12 +75,12 @@ describe('Server', () => {
 
   describe('GET /api/foods/:id', () => {
     beforeEach((done) => {
-      createSecret('Apple', 60).then(() => done())
+      createFood('Apple', 60).then(() => done())
       .catch(done);
     })
 
     afterEach((done) => {
-      clearSecrets().then(() => done());
+      clearFoods().then(() => done());
     })
 
     it('should return a 404 if the food is not found', (done) => {
@@ -116,12 +116,12 @@ describe('Server', () => {
 
   describe('PUT /api/foods/:id', () => {
     beforeEach((done) => {
-      createSecret('Apple', 60).then(() => done())
+      createFood('Apple', 60).then(() => done())
       .catch(done);
     })
 
     afterEach((done) => {
-      clearSecrets().then(() => done());
+      clearFoods().then(() => done());
     })
 
     it('should return a 422 if request body is empty', (done) => {
@@ -164,12 +164,12 @@ describe('Server', () => {
 
   describe('DELETE /api/foods/:id', () => {
     beforeEach((done) => {
-      createSecret('Apple', 60).then(() => done())
+      createFood('Apple', 60).then(() => done())
       .catch(done);
     })
 
     afterEach((done) => {
-      clearSecrets().then(() => done());
+      clearFoods().then(() => done());
     })
 
     it('should return a 404 if the food is not found', (done) => {
