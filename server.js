@@ -42,18 +42,20 @@ app.get('/api/foods/:id', (req, res) => {
 
 app.put('/api/foods/:id', (req, res) => {
   const id = req.params.id;
-  const food = req.body.food;
+  const name = req.body.name;
+  const calories = req.body.calories;
 
-  if(!food) {
+  if(!name || !calories) {
     return res.sendStatus(422);
   }
-  const updated = updateByID(id, app.locals.foods, food)
 
-  if(!updated) {
-    return res.sendStatus(404);
-  }
-  res.status(200).json({
-    food
+  database.raw(`UPDATE foods SET name = ?, calories = ? WHERE id = ?`,
+  [name, calories, id])
+  .then((data) => {
+    if(!data.rowCount) {
+      return res.sendStatus(404);
+    }
+    res.sendStatus(204);
   })
 })
 

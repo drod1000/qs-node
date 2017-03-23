@@ -111,8 +111,17 @@ describe('Server', () => {
   })
 
   describe('PUT /api/foods/:id', () => {
-    beforeEach(() => {
-      app.locals.foods = [{id: 1, name: 'Banana', calories: 120}];
+    beforeEach((done) => {
+      database.raw(
+        'INSERT INTO foods (name, calories) VALUES (?, ?)',
+        ["Apple", 60]
+      ).then(() => done())
+      .catch(done);
+    })
+
+    afterEach((done) => {
+      database.raw('TRUNCATE foods RESTART IDENTITY') // reset the ID
+      .then(() => done());
     })
 
     it('should return a 422 if request body is empty', (done) => {
@@ -127,7 +136,7 @@ describe('Server', () => {
     })
 
     it('should return a 404 if the food is not found', (done) => {
-      const food = {food: {name: 'Yogurt', calories: '60'}};
+      const food = {name: 'Yogurt', calories: '60'};
 
       this.request.put('/api/foods/2', {form: food}, (err, res) => {
         if(err) {
@@ -139,17 +148,15 @@ describe('Server', () => {
       })
     })
 
-    it('should return the corresponding food if it was updated sucessfully', (done) => {
-      const food = {food: {name: 'Yogurt', calories: '60'}};
+    it('should return a 204 if the corresponding food was updated sucessfully', (done) => {
+      const food = {name: 'Yogurt', calories: '60'};
 
       this.request.put('/api/foods/1', {form: food}, (err, res) => {
         if(err) {
           done(err);
         }
 
-        chai.assert.equal(res.statusCode, 200);
-        chai.assert.include(res.body, 'Yogurt');
-        chai.assert.include(res.body, '60');
+        chai.assert.equal(res.statusCode, 204);
         done();
       })
     })
