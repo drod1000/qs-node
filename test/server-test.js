@@ -5,6 +5,9 @@ const environment = process.env.NODE_ENV || 'development';
 const configuration = require('../knexfile')[environment];
 const database = require('knex')(configuration);
 
+function clearSecrets() {
+  return database.raw('TRUNCATE foods RESTART IDENTITY')
+}
 
 describe('Server', () => {
   before((done) => {
@@ -31,13 +34,11 @@ describe('Server', () => {
 
   describe('POST /api/foods', () => {
     beforeEach((done) => {
-      database.raw('TRUNCATE foods RESTART IDENTITY') // reset the ID
-      .then(() => done());
+      clearSecrets().then(() => done());
     })
 
     afterEach((done) => {
-      database.raw('TRUNCATE foods RESTART IDENTITY') // reset the ID
-      .then(() => done());
+      clearSecrets().then(() => done());
     })
 
     it('should return a 422 if request body is empty', (done) => {
@@ -75,8 +76,7 @@ describe('Server', () => {
     })
 
     afterEach((done) => {
-      database.raw('TRUNCATE foods RESTART IDENTITY') // reset the ID
-      .then(() => done());
+      clearSecrets().then(() => done());
     })
 
     it('should return a 404 if the food is not found', (done) => {
@@ -120,8 +120,7 @@ describe('Server', () => {
     })
 
     afterEach((done) => {
-      database.raw('TRUNCATE foods RESTART IDENTITY') // reset the ID
-      .then(() => done());
+      clearSecrets().then(() => done());
     })
 
     it('should return a 422 if request body is empty', (done) => {
@@ -172,8 +171,7 @@ describe('Server', () => {
     })
 
     afterEach((done) => {
-      database.raw('TRUNCATE foods RESTART IDENTITY') // reset the ID
-      .then(() => done());
+      clearSecrets().then(() => done());
     })
 
     it('should return a 404 if the food is not found', (done) => {
